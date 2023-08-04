@@ -1,0 +1,28 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: myappresource-reader
+  namespace: default
+rules:
+- apiGroups: ["my.api.group"]
+  resources: ["myappresources"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: [""]
+  resources: ["pods", "services"]
+  verbs: ["create", "get", "update", "delete"]
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: myappresource-reader-binding
+  namespace: default
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: default
+roleRef:
+  kind: Role
+  name: myappresource-reader
+  apiGroup: rbac.authorization.k8s.io

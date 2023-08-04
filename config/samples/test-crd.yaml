@@ -1,0 +1,17 @@
+apiVersion: "my.api.group/v1alpha1"
+kind: MyAppResource
+metadata:
+  name: my-app-resource-object
+spec:
+  replicaCount: 3
+  resources:
+    memoryLimit: "64Mi"
+    cpuRequest: "100m"
+  image:
+    repository: "ghcr.io/stefanprodan/podinfo"
+    tag: "latest"
+  ui:
+    color: "#FF7F7F"
+    message: "!!!nate was here!!!!!"
+  redis:
+    enabled: true

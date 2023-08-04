@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp-operator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myapp-operator
+  template:
+    metadata:
+      labels:
+        app: myapp-operator
+    spec:
+      containers:
+      - name: myapp-operator
+        image:  njhughes/go-angi:latest
+        imagePullPolicy: Always
