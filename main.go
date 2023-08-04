@@ -43,62 +43,30 @@ func main() {
 	myAppResourceInformer.AddEventHandler(cache.ResourceEventHandlerFuncs{
 		AddFunc: func(obj interface{}) {
 			fmt.Println("running myAppResource add callback")
-			unstructuredObj, ok := obj.(*unstructured.Unstructured)
-			if !ok {
-				fmt.Println("Invalid object type received in AddFunc")
-				return
-			}
-
-			// Unmarshal the unstructured object to your custom MyAppResource type
-			myAppResource := &mar.MyAppResource{}
-			if err := runtime.DefaultUnstructuredConverter.FromUnstructured(unstructuredObj.Object, myAppResource); err != nil {
-				fmt.Println("Failed to unmarshal the object:", err)
+			myAppResource, err := toMyAppResource(obj)
+			if err != nil {
 				return
 			}
 			controller.HandleMyAppResourceAdd(myAppResource, clientset)
 		},
 		UpdateFunc: func(oldObj, newObj interface{}) {
-			fmt.Println("running myAppResource update callback")
-			unstructuredNewObj, ok := newObj.(*unstructured.Unstructured)
-			if !ok {
-				fmt.Println("Invalid object type received in UpdateFunc")
+			fmt.Println("Running myAppResource update callback")
+			//fmt.Printf("Old object: %+v\n", oldObj)
+			//fmt.Printf("New object: %+v\n", newObj)
+			oldMyAppResource, err := toMyAppResource(oldObj)
+			if err != nil {
 				return
 			}
-
-			// Unmarshal the unstructured object to your custom MyAppResource type
-			newMyAppResource := &mar.MyAppResource{}
-			if err := runtime.DefaultUnstructuredConverter.FromUnstructured(unstructuredNewObj.Object, newMyAppResource); err != nil {
-				fmt.Println("Failed to unmarshal the object:", err)
+			newMyAppResource, err := toMyAppResource(newObj)
+			if err != nil {
 				return
 			}
-
-			unstructuredOldObj, ok := newObj.(*unstructured.Unstructured)
-			if !ok {
-				fmt.Println("Invalid object type received in UpdateFunc")
-				return
-			}
-
-			// Unmarshal the unstructured object to your custom MyAppResource type
-			oldMyAppResource := &mar.MyAppResource{}
-			if err := runtime.DefaultUnstructuredConverter.FromUnstructured(unstructuredOldObj.Object, oldMyAppResource); err != nil {
-				fmt.Println("Failed to unmarshal the object:", err)
-				return
-			}
-
 			controller.HandleMyAppResourceUpdate(oldMyAppResource, newMyAppResource, clientset)
 		},
 		DeleteFunc: func(obj interface{}) {
 			fmt.Println("running myAppResource add callback")
-			unstructuredObj, ok := obj.(*unstructured.Unstructured)
-			if !ok {
-				fmt.Println("Invalid object type received in AddFunc")
-				return
-			}
-
-			// Unmarshal the unstructured object to your custom MyAppResource type
-			myAppResource := &mar.MyAppResource{}
-			if err := runtime.DefaultUnstructuredConverter.FromUnstructured(unstructuredObj.Object, myAppResource); err != nil {
-				fmt.Println("Failed to unmarshal the object:", err)
+			myAppResource, err := toMyAppResource(obj)
+			if err != nil {
 				return
 			}
 			controller.HandleMyAppResourceDelete(myAppResource, clientset)
@@ -108,4 +76,19 @@ func main() {
 
 	// Wait forever or until an error occurs
 	select {}
+}
+
+func toMyAppResource(obj interface{}) (*mar.MyAppResource, error) {
+	unstructuredObj, ok := obj.(*unstructured.Unstructured)
+	if !ok {
+		return nil, fmt.Errorf("invalid object type received")
+	}
+
+	// Unmarshal the unstructured object to your custom MyAppResource type
+	myAppResource := &mar.MyAppResource{}
+	if err := runtime.DefaultUnstructuredConverter.FromUnstructured(unstructuredObj.Object, myAppResource); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal the object: %v", err)
+	}
+
+	return myAppResource, nil
 }

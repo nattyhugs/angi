@@ -13,6 +13,7 @@ import (
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 	"reflect"
+	"time"
 )
 
 func InitKubernetesClient() (*kubernetes.Clientset, dynamic.Interface) {
@@ -270,6 +271,10 @@ func HandleMyAppResourceUpdate(oldMyAppResource, newMyAppResource *mar.MyAppReso
 
 	// Delete the old resources
 	HandleMyAppResourceDelete(oldMyAppResource, clientset)
+
+	// Wait for a while to allow the resources to be deleted
+	fmt.Printf("Waiting for deletion to complete before re-adding\n")
+	time.Sleep(time.Duration(30) * time.Second)
 
 	// Create the new resources
 	HandleMyAppResourceAdd(newMyAppResource, clientset)

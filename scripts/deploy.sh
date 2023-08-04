@@ -5,7 +5,7 @@ kubectl apply -f config/samples/test-crd.yaml
 
 echo "Waiting 60 seconds for service to start before configuring port forwarding"
 # Start a command in the background
-sleep 60 &
+sleep 30 &
 # Wait for the background process to finish
 wait
 

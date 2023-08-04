@@ -12,6 +12,6 @@ spec:
     tag: "latest"
   ui:
     color: "#FF7F7F"
-    message: "!!!nate was here!!!!!"
+    message: "Use the force!"
   redis:
     enabled: true
