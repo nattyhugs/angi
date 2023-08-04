@@ -12,6 +12,6 @@ spec:
     tag: "latest"
   ui:
     color: "#FF7F7F"
-    message: "Use the force!"
+    message: "Use the force!!"
   redis:
     enabled: true

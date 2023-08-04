@@ -273,7 +273,7 @@ func HandleMyAppResourceUpdate(oldMyAppResource, newMyAppResource *mar.MyAppReso
 	HandleMyAppResourceDelete(oldMyAppResource, clientset)
 
 	// Wait for a while to allow the resources to be deleted
-	fmt.Printf("Waiting for deletion to complete before re-adding\n")
+	fmt.Printf("Waiting 30 seconds for deletion to complete before re-adding\n")
 	time.Sleep(time.Duration(30) * time.Second)
 
 	// Create the new resources
